@@ -56,7 +56,7 @@ func main() {
 	cfg := &Config{ 
 		DB:		dbQueries,
 	}
-	spellsJson, err := os.ReadFile("spells.json")
+	spellsJson, err := os.ReadFile("data/spells.json")
 	if err != nil {
 		log.Fatal(err)
 	}
