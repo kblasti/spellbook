@@ -209,7 +209,7 @@ function App() {
                 Create one
               </button>
             </p>
-
+            <p> This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode. </p>
             {error && <p className="error">{error}</p>}
           </>
         ) : (
@@ -302,7 +302,7 @@ function App() {
         <button onClick={() => setShowCreateCharacter(true)}>
           Create New Character
         </button>
-
+        
         {selectedCharacter && (
           <CharacterView
             character={selectedCharacter}
