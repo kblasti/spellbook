@@ -204,7 +204,7 @@
       "M"
     ],
     "material": "a bell and silver wire",
-    "ritual": false,
+    "ritual": true,
     "duration": "8 hours",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -373,7 +373,7 @@
       "M"
     ],
     "material": "a morsel of food",
-    "ritual": false,
+    "ritual": true,
     "duration": "24 hours",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -696,7 +696,7 @@
   },
   {
     "name": "Antipathy/Sympathy",
-    "index": "antipathy/sympathy",
+    "index": "sympathy",
     "desc": [
       "As you cast the spell, choose whether it creates",
       "antipathy or sympathy, and target one creature or",
@@ -1134,7 +1134,7 @@
       "M"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Instantaneous",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -1756,7 +1756,7 @@
   },
   {
     "name": "Blindness/Deafness",
-    "index": "blindness/deafness",
+    "index": "deafness",
     "desc": [
       "One creature that you can see within range must",
       "succeed on a Constitution saving throw, or it has",
@@ -2745,7 +2745,7 @@
       "M"
     ],
     "material": "incense",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 minute",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -2800,7 +2800,7 @@
       "S"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Instantaneous",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -2842,7 +2842,7 @@
       "M"
     ],
     "material": "a pinch of soot and salt",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 hour",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -3466,7 +3466,7 @@
       "V"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 minute",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -4508,7 +4508,7 @@
       "S"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Concentration, up to 10 minutes",
     "concentration": true,
     "casting_time": "Action or Ritual",
@@ -4567,7 +4567,7 @@
       "M"
     ],
     "material": "a yew leaf",
-    "ritual": false,
+    "ritual": true,
     "duration": "Concentration, up to 10 minutes",
     "concentration": true,
     "casting_time": "Action or Ritual",
@@ -5032,7 +5032,7 @@
       "M"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Instantaneous",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -5756,7 +5756,7 @@
   },
   {
     "name": "Enlarge/Reduce",
-    "index": "enlarge/reduce",
+    "index": "reduce",
     "desc": [
       "For the duration, the spell enlarges or reduces a",
       "creature or an object you can see within range (see",
@@ -6473,7 +6473,7 @@
       "M"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Instantaneous",
     "concentration": false,
     "casting_time": "1 hour or Ritual",
@@ -7173,7 +7173,7 @@
       "M"
     ],
     "material": "a drop of mercury",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 hour",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -7333,7 +7333,7 @@
       "M"
     ],
     "material": "ruby dust worth 1,000+ GP",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 day",
     "concentration": false,
     "casting_time": "10 minutes or Ritual",
@@ -7814,7 +7814,7 @@
       "M"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "10 days",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -9668,7 +9668,7 @@
       "M"
     ],
     "material": "a pearl worth 100+ GP",
-    "ritual": false,
+    "ritual": true,
     "duration": "Instantaneous",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -9717,7 +9717,7 @@
       "M"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "10 days",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -10036,7 +10036,7 @@
       "M"
     ],
     "material": "a sapphire worth 1,000+ GP",
-    "ritual": false,
+    "ritual": true,
     "duration": "Until dispelled",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -10527,7 +10527,7 @@
       "M"
     ],
     "material": "fur from a bloodhound",
-    "ritual": false,
+    "ritual": true,
     "duration": "Instantaneous",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -11033,7 +11033,7 @@
       "M"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Until dispelled",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -11543,7 +11543,7 @@
       "S"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "8 hours",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -12595,7 +12595,7 @@
       "S"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 hour",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -13783,7 +13783,7 @@
       "S"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Instantaneous",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -15260,7 +15260,7 @@
       "S"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "Concentration, up to 10 minutes",
     "concentration": true,
     "casting_time": "Action or Ritual",
@@ -15643,7 +15643,7 @@
       "S"
     ],
     "material": "",
-    "ritual": false,
+    "ritual": true,
     "duration": "10 minutes",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -16671,7 +16671,7 @@
       "M"
     ],
     "material": "two eggs",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 hour",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -17056,7 +17056,7 @@
       "M"
     ],
     "material": "a crystal bead",
-    "ritual": false,
+    "ritual": true,
     "duration": "8 hours",
     "concentration": false,
     "casting_time": "1 minute or Ritual",
@@ -17537,7 +17537,7 @@
       "M"
     ],
     "material": "a bit of string and of wood",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 hour",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -18154,7 +18154,7 @@
       "M"
     ],
     "material": "a short reed",
-    "ritual": false,
+    "ritual": true,
     "duration": "24 hours",
     "concentration": false,
     "casting_time": "Action or Ritual",
@@ -18206,7 +18206,7 @@
       "M"
     ],
     "material": "a piece of cork",
-    "ritual": false,
+    "ritual": true,
     "duration": "1 hour",
     "concentration": false,
     "casting_time": "Action or Ritual",

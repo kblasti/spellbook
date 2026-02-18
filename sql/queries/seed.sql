@@ -54,3 +54,12 @@ VALUES (
     $2
 )
 RETURNING *;
+
+-- name: AddSpellSlots :one
+INSERT INTO spell_slots (caster_type, caster_level, slots)
+VALUES (
+    $1,
+    $2,
+    $3
+)
+RETURNING *;

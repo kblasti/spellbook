@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Tester</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    input, button, textarea, select { margin-top: 10px; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+  <h1>API Tester</h1>
+
+  <h2>Login</h2>
+  <label>Email:</label><br>
+  <input id="email" type="text" style="width: 300px;"><br>
+
+  <label>Password:</label><br>
+  <input id="password" type="password" style="width: 300px;"><br>
+
+  <button onclick="login()">Login</button>
+
+  <h3>Token:</h3>
+  <pre id="tokenDisplay">(not logged in)</pre>
+
+  <hr>
+
+  <h2>API Call</h2>
+
+  <label>HTTP Method:</label><br>
+  <select id="method">
+    <option>GET</option>
+    <option>POST</option>
+    <option>PUT</option>
+    <option>DELETE</option>
+  </select><br>
+
+  <label>Endpoint (relative to http://localhost:8880):</label><br>
+  <input id="endpoint" type="text" value="/api/users" style="width: 400px;"><br>
+
+  <label>Request Body (JSON, optional):</label><br>
+  <textarea id="body" style="width: 400px; height: 120px;"></textarea><br>
+
+  <button onclick="callApi()">Send Request</button>
+
+  <h3>Response:</h3>
+  <pre id="output"></pre>
+
+  <script>
+    let jwtToken = "";
+
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const response = await fetch("http://localhost:8880/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (data.token) {
+        jwtToken = data.token;
+        document.getElementById("tokenDisplay").textContent = jwtToken;
+      } else {
+        document.getElementById("tokenDisplay").textContent = "Login failed: " + JSON.stringify(data);
+      }
+    }
+
+    async function callApi() {
+      const method = document.getElementById("method").value;
+      const endpoint = document.getElementById("endpoint").value;
+      const bodyText = document.getElementById("body").value.trim();
+
+      const options = {
+        method: method,
+        headers: {
+          "Authorization": "Bearer " + jwtToken,
+          "Content-Type": "application/json"
+        }
+      };
+
+      // Only attach body for methods that support it
+      if (bodyText !== "" && method !== "GET" && method !== "DELETE") {
+        options.body = bodyText;
+      }
+
+      const response = await fetch("http://localhost:8880" + endpoint, options);
+      const text = await response.text();
+
+      document.getElementById("output").textContent = text;
+    }
+  </script>
+
+</body>
+</html>

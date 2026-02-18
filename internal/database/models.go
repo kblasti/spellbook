@@ -6,15 +6,41 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/sqlc-dev/pqtype"
 )
+
+type Character struct {
+	ID          uuid.UUID
+	Name        string
+	ClassLevels json.RawMessage
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	UserID      uuid.UUID
+}
+
+type CharactersSpell struct {
+	SpellID int32
+	CharID  uuid.UUID
+}
 
 type Class struct {
 	ID    int32
 	Index string
 	Name  string
 	Url   sql.NullString
+}
+
+type RefreshToken struct {
+	Token     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	UserID    uuid.NullUUID
+	ExpiresAt time.Time
+	RevokedAt sql.NullTime
 }
 
 type Spell struct {
@@ -43,6 +69,12 @@ type SpellClass struct {
 	ClassID int32
 }
 
+type SpellSlot struct {
+	CasterType  string
+	CasterLevel int32
+	Slots       json.RawMessage
+}
+
 type SpellSubclass struct {
 	SpellID    int32
 	SubclassID int32
@@ -53,4 +85,13 @@ type Subclass struct {
 	Index string
 	Name  string
 	Url   sql.NullString
+}
+
+type User struct {
+	ID             uuid.UUID
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	Email          string
+	HashedPassword string
+	Role           string
 }

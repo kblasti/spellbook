@@ -8,6 +8,8 @@ import (
 
 type APIConfig struct {
   DB        *database.Queries
+  Platform  string
+  Secret    string
 }
 
 func respondWithError(w http.ResponseWriter, code int, msg string) {
@@ -36,3 +38,25 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 
     w.Write(data)
 }
+
+func respondWithMessage(w http.ResponseWriter, code int, msg string) {
+    respondWithJSON(w, code, map[string]string{
+        "message": msg,
+    })
+}
+
+
+func EnableCORS(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+        if r.Method == "OPTIONS" {
+            return
+        }
+
+        next.ServeHTTP(w, r)
+    })
+}
+

@@ -8,6 +8,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 
 	"github.com/lib/pq"
 	"github.com/sqlc-dev/pqtype"
@@ -59,6 +60,29 @@ func (q *Queries) AddSpellClass(ctx context.Context, arg AddSpellClassParams) (S
 	row := q.db.QueryRowContext(ctx, addSpellClass, arg.SpellID, arg.ClassID)
 	var i SpellClass
 	err := row.Scan(&i.SpellID, &i.ClassID)
+	return i, err
+}
+
+const addSpellSlots = `-- name: AddSpellSlots :one
+INSERT INTO spell_slots (caster_type, caster_level, slots)
+VALUES (
+    $1,
+    $2,
+    $3
+)
+RETURNING caster_type, caster_level, slots
+`
+
+type AddSpellSlotsParams struct {
+	CasterType  string
+	CasterLevel int32
+	Slots       json.RawMessage
+}
+
+func (q *Queries) AddSpellSlots(ctx context.Context, arg AddSpellSlotsParams) (SpellSlot, error) {
+	row := q.db.QueryRowContext(ctx, addSpellSlots, arg.CasterType, arg.CasterLevel, arg.Slots)
+	var i SpellSlot
+	err := row.Scan(&i.CasterType, &i.CasterLevel, &i.Slots)
 	return i, err
 }
 

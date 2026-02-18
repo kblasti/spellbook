@@ -151,6 +151,87 @@ func main() {
 
 	}
 
-	output := fmt.Sprintf("Added %v entries to database\n", entries)
+	var SpellSlotTable = map[int]map[int]int{ 
+		1: {1: 2}, 
+		2: {1: 3}, 
+		3: {1: 4, 2: 2}, 
+		4: {1: 4, 2: 3}, 
+		5: {1: 4, 2: 3, 3: 2}, 
+		6: {1: 4, 2: 3, 3: 3}, 
+		7: {1: 4, 2: 3, 3: 3, 4: 1}, 
+		8: {1: 4, 2: 3, 3: 3, 4: 2}, 
+		9: {1: 4, 2: 3, 3: 3, 4: 3, 5: 1}, 
+		10: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2}, 
+		11: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1}, 
+		12: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1}, 
+		13: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1}, 
+		14: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1}, 
+		15: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1}, 
+		16: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1}, 
+		17: {1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1, 9: 1}, 
+		18: {1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 1, 7: 1, 8: 1, 9: 1}, 
+		19: {1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 1, 8: 1, 9: 1}, 
+		20: {1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1}, 
+	}
+
+	var WarlockSpellSlotTable = map[int]map[int]int{ 
+		1: {1: 1}, 
+		2: {1: 2}, 
+		3: {2: 2}, 
+		4: {2: 2}, 
+		5: {3: 2}, 
+		6: {3: 2}, 
+		7: {4: 2}, 
+		8: {4: 2}, 
+		9: {5: 2}, 
+		10: {5: 2}, 
+		11: {5: 3}, 
+		12: {5: 3}, 
+		13: {5: 3}, 
+		14: {5: 3}, 
+		15: {5: 3}, 
+		16: {5: 3}, 
+		17: {5: 4}, 
+		18: {5: 4}, 
+		19: {5: 4}, 
+		20: {5: 4}, 
+	}
+
+	slotsnumber := 0
+	warlockslots := 0
+
+	for i := 1; i <= 20; i++ { 
+		jsonSlots, err := json.Marshal(SpellSlotTable[i]) 
+		if err != nil { 
+			log.Fatal(err) 
+		} 
+		_, err = cfg.DB.AddSpellSlots(context.Background(), database.AddSpellSlotsParams{ 
+			CasterType: "full", 
+			CasterLevel: int32(i), 
+			Slots: jsonSlots, 
+		}) 
+		if err != nil { 
+			log.Fatal(err) 
+		}
+		slotsnumber += 1
+	}
+
+	for i := 1; i <= 20; i++ { 
+		jsonSlots, err := json.Marshal(WarlockSpellSlotTable[i]) 
+		if err != nil { 
+			log.Fatal(err) 
+		} 
+		_, err = cfg.DB.AddSpellSlots(context.Background(), database.AddSpellSlotsParams{ 
+			CasterType: "warlock", 
+			CasterLevel: int32(i), 
+			Slots: jsonSlots, 
+		}) 
+		if err != nil { 
+			log.Fatal(err) 
+		} 
+		warlockslots += 1
+	}
+
+	output := fmt.Sprintf("Added %v entries to database\nAdded %v slots to table\nAdded %v warlock slots\n", entries, slotsnumber, warlockslots)
 	fmt.Println(output)
 }

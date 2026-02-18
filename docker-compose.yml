@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=shabingus
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=spellbook
     ports:
       - "5432:5432"
@@ -26,7 +26,7 @@ services:
         condition: service_healthy
     environment:
       - GOOSE_DRIVER=postgres
-      - GOOSE_DBSTRING=host=postgres port=5432 user=postgres password=shabingus dbname=spellbook sslmode=disable
+      - GOOSE_DBSTRING=${POSTGRES_DBURL}
       - GOOSE_VERBOSE=true
       # Provide the `GOOSE_COMMAND` variable to change the goose command to execute:
       #- GOOSE_COMMAND=up-to
@@ -43,7 +43,7 @@ services:
       migrations: 
         condition: service_completed_successfully
     environment: 
-      - POSTGRES_DBURL=host=postgres port=5432 user=postgres password=shabingus dbname=spellbook sslmode=disable 
+      - POSTGRES_DBURL=${POSTGRES_DBURL}
     command: ["./seed"] 
     restart: "no"
 
@@ -53,7 +53,7 @@ services:
       seed: 
         condition: service_completed_successfully
     environment: 
-      - POSTGRES_DBURL=host=postgres port=5432 user=postgres password=shabingus dbname=spellbook sslmode=disable 
+      - POSTGRES_DBURL=${POSTGRES_DBURL}
     ports: 
       - "8880:8880"
     command: ["./server"]
