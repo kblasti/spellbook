@@ -4,10 +4,10 @@ DnD2024 Spellbook using SRD data to allow customizable lists of spells and inter
 Docker containers were used to hold the database, goose migrations, initialize a database seed, and start the server.
 
 4 environment variables are required:
-  POSTGRES_DBURL which will be used by docker-compose for lining up the database, migrations, seed, and server
-  DB_PASSWORD which is the password you choose to use for your database
-  PLATFORM which is one secret string variable of your choice
-  SECRET which is a randomly generated key
+  POSTGRES_DBURL which will be used by docker-compose for lining up the database, migrations, seed, and server  
+  DB_PASSWORD which is the password you choose to use for your database  
+  PLATFORM which is one secret string variable of your choice  
+  SECRET which is a randomly generated key  
 
 The webapp handles the api endpoints for general use, but for specific api endpoints they are:
   GET /api/healthz: for checking server status  
