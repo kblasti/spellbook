@@ -4,6 +4,9 @@ import CharacterView from "./CharacterView";
 import CreateCharacterForm from "./CreateCharacterForm";
 import Layout from "./Layout";
 import "./App.css";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+
 
 function App() {
   const [userToken, setUserToken] = useState("");
@@ -14,6 +17,28 @@ function App() {
   const [error, setError] = useState("");
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [showCreateCharacter, setShowCreateCharacter] = useState(false);
+  const firebaseConfig = {
+
+  apiKey: "AIzaSyBhv337sCq137N55h-O5HKYSr2jf_evonA",
+
+  authDomain: "spellbook-b4017.firebaseapp.com",
+
+  projectId: "spellbook-b4017",
+
+  storageBucket: "spellbook-b4017.firebasestorage.app",
+
+  messagingSenderId: "166933618011",
+
+  appId: "1:166933618011:web:9e0cb017617f5cfb410e7e",
+
+  measurementId: "G-XGX7C0RZMS"
+
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  const analytics = getAnalytics(app);
+
 
   async function handleLogin(e) {
     e.preventDefault();
