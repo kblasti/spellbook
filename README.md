@@ -1,5 +1,5 @@
 # D&D 2024 Spellbook
-DnD2024 Spellbook using SRD data to allow customizable lists of spells and interactable mechanics to easier keep track of what spells are available and how many spell slots you have at any point.  Spell data is stored through Postgres and an api is built through the Golang net/http library.  Webapp is built through React.js.
+D&D 2024 Spellbook is an interactive spellbook made to make both spell and spell slot management easier for players. New players can enjoy a centralized space to organize what spells they know and take out the fuss of managing their spell slots by hand while more experienced players can utilize the freedom to customize their book with any spells of their choice they learn through different means and enable them to take their turns faster.
 
 Docker containers were used to hold the database, goose migrations, initialize a database seed, and start the server.
 
