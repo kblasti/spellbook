@@ -32,10 +32,12 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
   const [isSpellbookFadingOut, setIsSpellbookFadingOut] = useState(false);
   const [spellbookContent, setSpellbookContent] = useState(spellbookMode);
 
+  // Saved levels under edit levels button changes on character switch
   useEffect(() => { 
     setEditLevels({ ...character.class_levels }); 
   }, [character.id]);
   
+    // Displayed spell slots change on switching characters
     useEffect(() => {
         (async () => {
             const slotData = await getCharacterSlots(character.id);
@@ -59,6 +61,7 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
         })();
     }, [character.id, JSON.stringify(character.class_levels)]);
 
+    // Known spells swap on character change
     useEffect(() => {
         (async () => {
             const known = await getCharacterSpells(character.id);
@@ -66,7 +69,7 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
         })();
     }, [character.id, character.spells]);
 
-
+    // Fetch all spells on start
     useEffect(() => {
         (async () => {
             const all = await getAllSpells();
@@ -75,6 +78,7 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
         })();
     }, []);
 
+    // Filters for spell searching
     useEffect(() => {
         if (allSpells.length === 0) return;
 
@@ -91,6 +95,7 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
         allSpells
     ]);
 
+    // Fadeout animation between spell slot levels and placeholder
     useEffect(() => {
         const next = selectedSlotLevel ? "spells" : "placeholder";
 
@@ -107,6 +112,7 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
         }
     }, [selectedSlotLevel]);
 
+    // Fade out animation for full spellbook and spells known
     useEffect(() => {
         if (spellbookMode !== spellbookContent) {
             setIsSpellbookFadingOut(true);

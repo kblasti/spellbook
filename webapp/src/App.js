@@ -147,6 +147,7 @@ function App() {
     }
   }
 
+  // ensures all characters follow correct parameters
   function normalizeCharacter(c) {
     return {
       id: c.id || c.id,
@@ -155,6 +156,7 @@ function App() {
     };
   }
 
+  // makes sure character list changes in event of loggin in to different account from the same client
   useEffect(() => {
     if (!userToken) return;
 
@@ -175,6 +177,7 @@ function App() {
     })();
   }, [userToken]);
 
+  // login/account creation
   if (!userToken) {
     return (
       <Layout 
@@ -246,7 +249,7 @@ function App() {
     );
   }
 
-
+  //Base layout without a character selected
   return (
   <Layout 
     user={email}
