@@ -1,5 +1,6 @@
 # D&D 2024 Spellbook
 D&D 2024 Spellbook is an interactive spellbook made to make both spell and spell slot management easier for players. New players can enjoy a centralized space to organize what spells they know and take out the fuss of managing their spell slots by hand while more experienced players can utilize the freedom to customize their book with any spells of their choice they learn through different means and enable them to take their turns faster.
+![spellbook](https://github.com/user-attachments/assets/4a0c85f0-2378-4800-a744-ad1917294ba8)
 
 ## Motivation
 
