@@ -24,18 +24,6 @@
   text-align: left;
 }
 
-.spell-green {
-  background-color: #d4f8d4;
-}
-
-.spell-gray {
-  background-color: #e0e0e0;
-}
-
-.spell-red {
-  background-color: #f8d4d4;
-}
-
 .spell-block {
   display: flex;
   flex-direction: row;
@@ -116,7 +104,7 @@
   overflow-x: hidden;
   text-align: left; 
   flex: 1; 
-  overflow-y: auto; 
+  overflow-y: visible; 
 }
 
 .spell-details {
@@ -210,7 +198,7 @@
 }
 
 .sidebar.open {
-  width: 220px; /* expanded width */
+  width: 220px;
 }
 
 .user-info {
@@ -249,15 +237,13 @@
 }
 
 .spell-details-wrapper {
-  max-height: 0;
   width: 100%;
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible;
   transition: max-height 0.25s ease;
 }
 
 .spell-details-wrapper.open {
-  max-height: 500px;
   transition: max-height 0.3s ease;
 }
 
@@ -398,15 +384,12 @@ select {
   color: #4a3b2a;
   cursor: pointer;
 
-  /* Remove browser arrows */
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  /* Make sure no background arrow sneaks in */
   background-image: none !important;
 
-  /* Optional: match button hover */
   transition: background 0.2s ease;
 }
 

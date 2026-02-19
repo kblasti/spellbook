@@ -4,6 +4,9 @@ import CharacterView from "./CharacterView";
 import CreateCharacterForm from "./CreateCharacterForm";
 import Layout from "./Layout";
 import "./App.css";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+
 
 function App() {
   const [userToken, setUserToken] = useState("");
@@ -14,6 +17,13 @@ function App() {
   const [error, setError] = useState("");
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [showCreateCharacter, setShowCreateCharacter] = useState(false);
+  const firebaseConfig = {
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  const analytics = getAnalytics(app);
+
 
   async function handleLogin(e) {
     e.preventDefault();
