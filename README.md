@@ -8,7 +8,7 @@ I have run D&D campaigns for my friends for years, and I've found managing spell
 
 ## Quick Start
 
-This project is in development for being hosted, but in the meantime if you want to see how it works you can clone the repo here.
+Webapp is hosted at https://spellbook-b4017.web.app/
 ```bash
 git clone https://github.com/kblasti/spellbook
 cd spellbook
