@@ -5,8 +5,6 @@ import CharacterView from "./CharacterView";
 import CreateCharacterForm from "./CreateCharacterForm";
 import Layout from "./Layout";
 import "./App.css";
-import { collection, addDoc, getDocs } from "firebase/firestore"; 
-import { db } from "./firebase";
 
 function App() {
   const [userToken, setUserToken] = useState("");
@@ -17,13 +15,6 @@ function App() {
   const [error, setError] = useState("");
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [showCreateCharacter, setShowCreateCharacter] = useState(false);
-  const firebaseConfig = {
-  };
-
-  const app = initializeApp(firebaseConfig);
-
-  const analytics = getAnalytics(app);
-
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -188,7 +179,7 @@ function App() {
     }
   }, []);
 
-  // makes sure character list changes in event of loggin in to different account from the same client
+  // makes sure character list changes in event of logging in to different account from the same client
   useEffect(() => {
     if (!userToken) return;
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getCharacterSlots, getCharacterSpells, addSpellToCharacter, getSpellDetails, getAllSpells, getSpellsByClass, getSpellsBySubclass, updateCharacterLevels } from "./api";
+import { getCharacterSlots, getCharacterSpells, addSpellToCharacter, getAllSpells, getSpellsByClass, getSpellsBySubclass, updateCharacterLevels, getSpellDetails } from "./api";
 
 function CharacterView({ character, setCharacter, updateCharacterInList, onRemoveSpell }) {
   const [fullCasterSlots, setFullCasterSlots] = useState({});
@@ -8,7 +8,8 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
   const [selectedSlotLevel, setSelectedSlotLevel] = useState(null);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [expandedSpell, setExpandedSpell] = useState(null);
+  const [expandedSpellBook, setExpandedSpellBook] = useState(null);
+  const [expandedSearch, setExpandedSearch] = useState(null);
   const [spellDetails, setSpellDetails] = useState({});
   const [allSpells, setAllSpells] = useState([]);
   const [filterLevel, setFilterLevel] = useState("");
@@ -230,20 +231,28 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
         );
     }
 
-    async function toggleSpellDetails(spell) {
-        console.log("Fetching details for:", spell.index);
-        if (expandedSpell === spell.index) {
-            setExpandedSpell(null);
-            return;
-        }
-
+    async function toggleSpellbookDetails(spell) {
         if (!spellDetails[spell.index]) {
             const details = await getSpellDetails(spell.index);
             setSpellDetails(prev => ({ ...prev, [spell.index]: details }));
         }
 
-        setExpandedSpell(spell.index);
+        setExpandedSpellBook(prev =>
+            prev === spell.index ? null : spell.index
+        );
     }
+
+    async function toggleSearchDetails(spell) {
+        if (!spellDetails[spell.index]) {
+            const details = await getSpellDetails(spell.index);
+            setSpellDetails(prev => ({ ...prev, [spell.index]: details }));
+        }
+
+        setExpandedSearch(prev =>
+            prev === spell.index ? null : spell.index
+        );
+    }
+
 
     function castSpell(spell) {
         const slot = getSelectedSlot();
@@ -473,7 +482,7 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                         <div key={spell.index} className="spell-block">
                             <div
                             className={`spell-name`}
-                            onClick={() => toggleSpellDetails(spell)}
+                            onClick={() => toggleSpellbookDetails(spell)}
                             >
                             {spell.name} (Lv {spell.level})
                             </div>
@@ -485,11 +494,11 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                                 Cast Spell
                             </button>
 
-                            {expandedSpell === spell.index &&
+                            {expandedSpellBook === spell.index &&
                                 spellDetails[spell.index] && (
                                 <div
                                     className={`spell-details-wrapper ${
-                                        expandedSpell === spell.index ? "open" : ""
+                                        expandedSpellBook === spell.index ? "open" : ""
                                     }`}
                                     >
                                     <div className="spell-details">
@@ -621,18 +630,18 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                             <div className="known-spells spellbook-frame"> 
                                 {spells.map(spell => ( 
                                     <div key={spell.index} className="spell-result"
-                                    onClick={() => toggleSpellDetails(spell)}
+                                    onClick={() => toggleSearchDetails(spell)}
                                     > 
                                         <strong>{spell.name}</strong> (Lv {spell.level}) 
                                         <button className="remove-button" onClick={(e) => { 
                                             e.stopPropagation();
                                             onRemoveSpell(character.id, spell.index);
                                             }}>Remove</button>
-                                            {expandedSpell === spell.index &&
+                                            {expandedSearch === spell.index &&
                                                 spellDetails[spell.index] && (
                                                 <div
                                                     className={`spell-details-wrapper ${
-                                                        expandedSpell === spell.index ? "open" : ""
+                                                        expandedSearch === spell.index ? "open" : ""
                                                     }`}
                                                     >
                                                     <div className="spell-details">
@@ -672,18 +681,18 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                             <div className="full-spellbook spellbook-frame"> 
                                 {searchResults.map(spell => ( 
                                     <div key={spell.index} className="spell-result"
-                                    onClick={() => toggleSpellDetails(spell)}
+                                    onClick={() => toggleSearchDetails(spell)}
                                     > 
                                         <strong>{spell.name}</strong> (Lv {spell.level})
                                         <button onClick={(e) => { 
                                             e.stopPropagation(); 
                                             addSpellToCharacterHandler(spell);}}
                                             >Add</button>
-                                            {expandedSpell === spell.index &&
+                                            {expandedSearch === spell.index &&
                                                 spellDetails[spell.index] && (
                                                 <div
                                                     className={`spell-details-wrapper ${
-                                                        expandedSpell === spell.index ? "open" : ""
+                                                        expandedSearch === spell.index ? "open" : ""
                                                     }`}
                                                     >
                                                     <div className="spell-details">
