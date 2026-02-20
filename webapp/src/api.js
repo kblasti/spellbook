@@ -1,7 +1,4 @@
 const API_BASE = process.env.REACT_APP_API_URL || '';
-const express = require("express"); 
-const router = express.Router(); 
-const { isValidEmailFormat, isDisposableEmail } = require("../utils/emailValidation");
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");

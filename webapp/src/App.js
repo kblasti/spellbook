@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { login, getCharacters, createUser, deleteCharacter, updateUser, deleteUser, deleteCharacterSpell } from "./api";
-import { isValidEmailFormat, isDisposableEmail } from "../utils/emailValidation";
+import { isValidEmailFormat, isDisposableEmail } from "./emailValidation";
 import CharacterView from "./CharacterView";
 import CreateCharacterForm from "./CreateCharacterForm";
 import Layout from "./Layout";
