@@ -32,3 +32,8 @@ WHERE id = $1;
 SELECT id, hashed_password
 FROM users
 WHERE id = $1;
+
+-- name: GetUserByID :one
+SELECT id, created_at, updated_at, email, hashed_password, role
+FROM users
+WHERE id = $1;
