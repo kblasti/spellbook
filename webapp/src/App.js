@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { login, getCharacters, createUser, deleteCharacter, updateUser, deleteUser, deleteCharacterSpell } from "./api";
+import { isValidEmailFormat, isDisposableEmail } from "./emailValidation";
 import CharacterView from "./CharacterView";
 import CreateCharacterForm from "./CreateCharacterForm";
 import Layout from "./Layout";
 import "./App.css";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
+import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import { db } from "./firebase";
 
 function App() {
   const [userToken, setUserToken] = useState("");
@@ -43,13 +43,27 @@ function App() {
     }
   }
 
-
   async function handleCreateAccount(e) {
     e.preventDefault();
     setError("");
 
+    if (!isValidEmailFormat(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    if (isDisposableEmail(email)) {
+      setError("Disposable email addresses are not allowed");
+      return;
+    }
+
     try {
       const data = await createUser(email, password);
+
+      if (data.error) {
+        setError(data.error);
+        return;
+      }
 
       if (data.token) {
         localStorage.setItem("token", data.token);
@@ -62,6 +76,7 @@ function App() {
       setError("Account creation failed");
     }
   }
+
 
   async function handleDeleteUser(passwordConfirmation) {
     try {
@@ -165,6 +180,13 @@ function App() {
       class_levels: { ...(c.class_levels || c.ClassLevels || {}) },
     };
   }
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+      setUserToken(savedToken);
+    }
+  }, []);
 
   // makes sure character list changes in event of loggin in to different account from the same client
   useEffect(() => {

@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8880";
+const API_BASE = process.env.REACT_APP_API_URL || '';
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");
