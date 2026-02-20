@@ -23,7 +23,7 @@ func main() {
     Platform:   os.Getenv("PLATFORM"),
     Secret:     os.Getenv("SECRET"),
   }
-  port := "8880"
+  port := os.Getenv("PORT")
   filepathRoot:= "/app/"
   mux := http.NewServeMux()
   mux.Handle(filepathRoot, http.StripPrefix("/app", http.FileServer(http.Dir("."))))

@@ -30,3 +30,18 @@ setGlobalOptions({ maxInstances: 10 });
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+
+admin.initializeApp();
+const db = admin.firestore();
+
+exports.helloWorld = functions.https.onRequest((req, res) => {
+  res.json({ message: "Hello from Firebase API!" });
+});
+
+exports.addSpell = functions.https.onCall(async (data, context) => {
+  const doc = await db.collection("spells").add(data);
+  return { id: doc.id };
+});

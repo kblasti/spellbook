@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { login, getCharacters, createUser, deleteCharacter, updateUser, deleteUser, deleteCharacterSpell } from "./api";
+import { isValidEmailFormat, isDisposableEmail } from "../utils/emailValidation";
 import CharacterView from "./CharacterView";
 import CreateCharacterForm from "./CreateCharacterForm";
 import Layout from "./Layout";
 import "./App.css";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
+import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import { db } from "./firebase";
 
 function App() {
   const [userToken, setUserToken] = useState("");
@@ -17,28 +17,6 @@ function App() {
   const [error, setError] = useState("");
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [showCreateCharacter, setShowCreateCharacter] = useState(false);
-  const firebaseConfig = {
-
-  apiKey: "AIzaSyBhv337sCq137N55h-O5HKYSr2jf_evonA",
-
-  authDomain: "spellbook-b4017.firebaseapp.com",
-
-  projectId: "spellbook-b4017",
-
-  storageBucket: "spellbook-b4017.firebasestorage.app",
-
-  messagingSenderId: "166933618011",
-
-  appId: "1:166933618011:web:9e0cb017617f5cfb410e7e",
-
-  measurementId: "G-XGX7C0RZMS"
-
-  };
-
-  const app = initializeApp(firebaseConfig);
-
-  const analytics = getAnalytics(app);
-
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -58,13 +36,27 @@ function App() {
     }
   }
 
-
   async function handleCreateAccount(e) {
     e.preventDefault();
     setError("");
 
+    if (!isValidEmailFormat(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    if (isDisposableEmail(email)) {
+      setError("Disposable email addresses are not allowed");
+      return;
+    }
+
     try {
       const data = await createUser(email, password);
+
+      if (data.error) {
+        setError(data.error);
+        return;
+      }
 
       if (data.token) {
         localStorage.setItem("token", data.token);
@@ -77,6 +69,7 @@ function App() {
       setError("Account creation failed");
     }
   }
+
 
   async function handleDeleteUser(passwordConfirmation) {
     try {
@@ -180,6 +173,13 @@ function App() {
       class_levels: { ...(c.class_levels || c.ClassLevels || {}) },
     };
   }
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+      setUserToken(savedToken);
+    }
+  }, []);
 
   // makes sure character list changes in event of loggin in to different account from the same client
   useEffect(() => {

@@ -1,2 +1,27 @@
+# Environment variables
 .env
+*.env
 
+# Database dumps
+dump.sql
+dump_clean.sql
+
+# Firebase / Google Cloud (you want these excluded)
+firebase.js
+firebase.json
+firestore.rules
+firestore.indexes.json
+firestore-debug.log
+**/functions/   # ignore cloud functions folder
+**/.firebase/   # local emulator data
+
+# Build artifacts
+build/
+dist/
+
+# Node modules
+node_modules/
+
+# OS junk
+.DS_Store
+Thumbs.db

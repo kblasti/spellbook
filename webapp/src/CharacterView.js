@@ -8,9 +8,6 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
   const [selectedSlotLevel, setSelectedSlotLevel] = useState(null);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const castableSpells = selectedSlotLevel
-    ? spells.filter(spell => selectedSlotLevel.level >= spell.level)
-    : [];
   const [expandedSpell, setExpandedSpell] = useState(null);
   const [spellDetails, setSpellDetails] = useState({});
   const [allSpells, setAllSpells] = useState([]);
@@ -31,6 +28,25 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
   const [storedSlotLevel, setStoredSlotLevel] = useState(selectedSlotLevel);
   const [isSpellbookFadingOut, setIsSpellbookFadingOut] = useState(false);
   const [spellbookContent, setSpellbookContent] = useState(spellbookMode);
+  const subclassOptions = {
+  bard: [],
+  cleric: ["life"],
+  druid: ["land"],
+  paladin: ["devotion"],
+  ranger: [],
+  sorcerer: ["draconic"],
+  warlock: ["fiend"],
+  wizard: []
+  };
+  const handleClassChange = (e) => {
+    const value = e.target.value;
+    setFilterClass(value);
+
+    // If class is cleared, also clear subclass
+    if (value === "") {
+        setFilterSubclass("");
+    }
+  };
 
   // Saved levels under edit levels button changes on character switch
   useEffect(() => { 
@@ -182,24 +198,36 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
             filtered = filtered.filter(spell => spell.ritual === true);
         }
 
-        // 2. Backend filters (class/subclass)
-        if (filterClass) {
+        // 2. Backend filters (subclass overrides class)
+        if (filterSubclass) {
+            // Subclass selected → ignore class filter entirely
+            const subclassResults = await getSpellsBySubclass(filterSubclass);
+            const allowedIndexes = new Set(subclassResults.map(s => s.index));
+            filtered = filtered.filter(spell => allowedIndexes.has(spell.index));
+        } else if (filterClass) {
+            // Only apply class filter if subclass is NOT selected
             const classResults = await getSpellsByClass(filterClass);
             const allowedIndexes = new Set(classResults.map(s => s.index));
             filtered = filtered.filter(spell => allowedIndexes.has(spell.index));
         }
-
-        if (filterSubclass) {
-            const subclassResults = await getSpellsBySubclass(filterSubclass);
-            const allowedIndexes = new Set(subclassResults.map(s => s.index));
-            filtered = filtered.filter(spell => allowedIndexes.has(spell.index));
-        }
-
+        filtered.sort((a, b) => { 
+            if (a.level !== b.level) { 
+                return a.level - b.level; 
+            } 
+            return a.name.localeCompare(b.name); }
+        );
         setSearchResults(filtered);
     }
 
     function selectSlot(type, level) {
-        setSelectedSlotLevel({ type, level });
+        const key = `${type}-${level}`;
+
+        setSelectedSlotLevel(prev => prev === key ? null : key);
+
+        // Keep old logic working
+        setStoredSlotLevel(prev =>
+            prev === level ? null : level
+        );
     }
 
     async function toggleSpellDetails(spell) {
@@ -218,7 +246,8 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
     }
 
     function castSpell(spell) {
-        const { type, level } = selectedSlotLevel;
+        const slot = getSelectedSlot();
+        const { type, level } = slot;
 
         if (level === 0) {
             setSelectedSlotLevel(null);
@@ -284,6 +313,19 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
         const updated = await getCharacterSpells(character.id);
         setSpells(updated);
     }
+
+    function getSelectedSlot() {
+        if (!selectedSlotLevel) return null;
+
+        const [type, levelStr] = selectedSlotLevel.split("-");
+        return { type, level: Number(levelStr) };
+    }
+
+    const slot = getSelectedSlot();
+
+    const castableSpells = selectedSlotLevel
+    ? spells.filter(spell => slot.level >= spell.level)
+    : [];
 
   return (
     <div className="character-view two-column">
@@ -355,10 +397,12 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
             <h3>Spell Slots</h3>
 
             <div className="slot-row">
-                <button onClick={() => {
-                    setSpellbookMode("level");
-                    selectSlot("full", 0);
-                }}>
+                <button
+                    onClick={() => {
+                        setSpellbookMode("level");
+                        selectSlot("full", 0);
+                    }}
+                    >
                     Cantrips
                 </button>
 
@@ -374,32 +418,24 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
             </div>
 
             <div className="slot-row">
-            {Object.entries(fullCasterSlots).map(([level, info]) => (
-                <button
-                key={level}
-                onClick={() => selectSlot("full", Number(level))}
-                >
-                Lv {level}: {info.max - info.used}/{info.max}
-                </button>
+            {Object.entries(fullCasterSlots).map(([level, info]) => ( 
+                <button 
+                    key={level} 
+                    onClick={() => selectSlot("full", Number(level))} 
+                > 
+                    Lv {level}: {info.max - info.used}/{info.max} 
+                </button> 
+            ))}
+
+            {Object.entries(warlockSlots).map(([level, info]) => ( 
+                <button 
+                    key={level} 
+                    onClick={() => selectSlot("warlock", Number(level))} 
+                > 
+                    Lv {level}: {info.max - info.used}/{info.max} 
+                </button> 
             ))}
             </div>
-
-            {Object.keys(warlockSlots).length > 0 && (
-            <>
-                <h3>Warlock Slots (Pact Magic)</h3>
-
-                <div className="slot-row">
-                {Object.entries(warlockSlots).map(([level, info]) => (
-                    <button
-                    key={level}
-                    onClick={() => selectSlot("warlock", Number(level))}
-                    >
-                    Lv {level}: {info.max - info.used}/{info.max}
-                    </button>
-                ))}
-                </div>
-            </>
-            )}
 
             <button onClick={shortRest}>Short Rest</button>
             <button onClick={longRest}>Long Rest</button>
@@ -414,7 +450,11 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                 <div className={`fade-panel ${isFadingOut ? "fade-out" : "fade-in"}`}>
                     {currentPanel === "spells" ?  (
                     <div className="spells-for-slot spellbook-frame">
-                        <h3>Spells for Slot Level {storedSlotLevel?.level}</h3>
+                        <h3>
+                            {slot
+                                ? `Spells for Slot Level ${slot.level}`
+                                : "Select a Spell Slot"}
+                        </h3>
 
                         <button
                         className="rune-button"
@@ -425,9 +465,9 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
 
                         {castableSpells
                             .filter(spell => 
-                                storedSlotLevel?.level === 0
-                                ? true 
-                                : spell.level > 0
+                                slot?.level === 0
+                                    ? true
+                                    : spell.level > 0
                             ) 
                             .map(spell => (
                         <div key={spell.index} className="spell-block">
@@ -518,7 +558,7 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                     </select>
 
                     {/* Class Filter */} 
-                    <select value={filterClass} onChange={e => setFilterClass(e.target.value)}> 
+                    <select value={filterClass} onChange={handleClassChange}> 
                         <option value="">All Classes</option> 
                         <option value="bard">Bard</option> 
                         <option value="cleric">Cleric</option> 
@@ -531,13 +571,19 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                     </select> 
 
                     {/* Subclass Filter */}
-                    <select value={filterSubclass} onChange={e => setFilterSubclass(e.target.value)}>
+                    <select
+                        value={filterSubclass}
+                        onChange={e => setFilterSubclass(e.target.value)}
+                        >
                         <option value="">All Subclasses</option>
-                        <option value="land">Land</option>
-                        <option value="life">Life</option>
-                        <option value="devotion">Devotion</option>
-                        <option value="draconic">Draconic</option>
-                        <option value="fiend">Fiend</option>
+
+                        {filterClass &&
+                            subclassOptions[filterClass].map(sub => (
+                            <option key={sub} value={sub}>
+                                {sub.charAt(0).toUpperCase() + sub.slice(1)}
+                            </option>
+                            ))
+                        }
                     </select>
 
                     {/* Concentration */} 
@@ -574,18 +620,102 @@ function CharacterView({ character, setCharacter, updateCharacterInList, onRemov
                         {spellbookContent === "known" ? ( 
                             <div className="known-spells spellbook-frame"> 
                                 {spells.map(spell => ( 
-                                    <div key={spell.index} className="spell-result"> 
+                                    <div key={spell.index} className="spell-result"
+                                    onClick={() => toggleSpellDetails(spell)}
+                                    > 
                                         <strong>{spell.name}</strong> (Lv {spell.level}) 
-                                        <button className="remove-button" onClick={() => onRemoveSpell(character.id, spell.index)}>Remove</button> 
+                                        <button className="remove-button" onClick={(e) => { 
+                                            e.stopPropagation();
+                                            onRemoveSpell(character.id, spell.index);
+                                            }}>Remove</button>
+                                            {expandedSpell === spell.index &&
+                                                spellDetails[spell.index] && (
+                                                <div
+                                                    className={`spell-details-wrapper ${
+                                                        expandedSpell === spell.index ? "open" : ""
+                                                    }`}
+                                                    >
+                                                    <div className="spell-details">
+                                                        {spellDetails[spell.index] && (
+                                                        <>
+                                                            <p><strong>Range:</strong> {spellDetails[spell.index].range}</p>
+                                                            <p><strong>Casting Time:</strong> {spellDetails[spell.index].casting_time}</p>
+                                                            <p><strong>Duration:</strong> {spellDetails[spell.index].duration}</p>
+                                                            <p><strong>Components:</strong> {spellDetails[spell.index].components?.join(", ")}</p>
+
+                                                            {spellDetails[spell.index].material && (
+                                                            <p><strong>Material:</strong> {spellDetails[spell.index].material}</p>
+                                                            )}
+
+                                                            <p><strong>Description:</strong></p>
+                                                            {spellDetails[spell.index].desc?.map((line, i) => (
+                                                            <p key={i}>{line}</p>
+                                                            ))}
+
+                                                            {spellDetails[spell.index].higher_level?.length > 0 && (
+                                                            <>
+                                                                <p><strong>At Higher Levels:</strong></p>
+                                                                {spellDetails[spell.index].higher_level.map((line, i) => (
+                                                                <p key={i}>{line}</p>
+                                                                ))}
+                                                            </>
+                                                            )}
+                                                        </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
                                     </div> 
                                 ))} 
                             </div> 
                         ) : (
                             <div className="full-spellbook spellbook-frame"> 
                                 {searchResults.map(spell => ( 
-                                    <div key={spell.index} className="spell-result"> 
-                                        <strong>{spell.name}</strong> (Lv {spell.level}) 
-                                        <button onClick={() => addSpellToCharacterHandler(spell)}>Add</button> 
+                                    <div key={spell.index} className="spell-result"
+                                    onClick={() => toggleSpellDetails(spell)}
+                                    > 
+                                        <strong>{spell.name}</strong> (Lv {spell.level})
+                                        <button onClick={(e) => { 
+                                            e.stopPropagation(); 
+                                            addSpellToCharacterHandler(spell);}}
+                                            >Add</button>
+                                            {expandedSpell === spell.index &&
+                                                spellDetails[spell.index] && (
+                                                <div
+                                                    className={`spell-details-wrapper ${
+                                                        expandedSpell === spell.index ? "open" : ""
+                                                    }`}
+                                                    >
+                                                    <div className="spell-details">
+                                                        {spellDetails[spell.index] && (
+                                                        <>
+                                                            <p><strong>Range:</strong> {spellDetails[spell.index].range}</p>
+                                                            <p><strong>Casting Time:</strong> {spellDetails[spell.index].casting_time}</p>
+                                                            <p><strong>Duration:</strong> {spellDetails[spell.index].duration}</p>
+                                                            <p><strong>Components:</strong> {spellDetails[spell.index].components?.join(", ")}</p>
+
+                                                            {spellDetails[spell.index].material && (
+                                                            <p><strong>Material:</strong> {spellDetails[spell.index].material}</p>
+                                                            )}
+
+                                                            <p><strong>Description:</strong></p>
+                                                            {spellDetails[spell.index].desc?.map((line, i) => (
+                                                            <p key={i}>{line}</p>
+                                                            ))}
+
+                                                            {spellDetails[spell.index].higher_level?.length > 0 && (
+                                                            <>
+                                                                <p><strong>At Higher Levels:</strong></p>
+                                                                {spellDetails[spell.index].higher_level.map((line, i) => (
+                                                                <p key={i}>{line}</p>
+                                                                ))}
+                                                            </>
+                                                            )}
+                                                        </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )} 
                                     </div> 
                                 ))} 
                             </div>
